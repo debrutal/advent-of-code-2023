@@ -1,3 +1,4 @@
+use std::cmp::{max, min};
 use std::fs::read_to_string;
 
 const NUMBER_STRINGS: [&'static str; 9] = [
@@ -7,7 +8,6 @@ const NUMBER_STRINGS: [&'static str; 9] = [
 fn main() {
     let path = "input/input.txt";
     let input = read_to_string(&path).expect(&format!("Could not read file {}", &path).to_string());
-    //println!("{input}");
 
     let numbers: Vec<u32> = get_numbers(input);
     let sum: u32 = numbers.iter().sum();
@@ -24,17 +24,24 @@ fn get_numbers(input: String) -> Vec<u32> {
 // gets the first and last number in the given string
 // also interprets written characters as number e.g. one, five, etc. up to nine
 fn get_first_and_last_number(line: String) -> u32 {
-    print!("text {line}");
-    let first = find_first(&line);
-    let last = find_last(&line);
-    let number = format!("{}{}", first, last);
-    println!("adding {first}{last}");
+    print!("{line} ");
+    let (first, index_of_first) = find_first(&line);
+    let (last, index_of_last) = find_last(&line);
+
+    let number = if index_of_first == index_of_last {
+        println!("adding {first}");
+        format!("{}", first)
+    } else {
+        println!("adding {first}{last}");
+        format!("{}{}", first, last)
+    };
+
     number
         .parse::<u32>()
         .expect(&format!("not a number {number}").to_string())
 }
 
-fn find_first(line: &String) -> String {
+fn find_first(line: &String) -> (String, usize) {
     let number_index = line.chars().position(|e| e.is_digit(10)).unwrap() as usize;
     print!("fi = {number_index} ");
     let mut result = line[number_index..number_index + 1].to_string();
@@ -48,10 +55,10 @@ fn find_first(line: &String) -> String {
             }
         }
     }
-    result
+    (result, min(lowest_index, number_index))
 }
 
-fn find_last(line: &String) -> String {
+fn find_last(line: &String) -> (String, usize) {
     let number_index =
         line.len() - line.chars().rev().position(|e| e.is_digit(10)).unwrap() as usize - 1;
     print!("li: {number_index} ");
@@ -70,7 +77,7 @@ fn find_last(line: &String) -> String {
             }
         }
     }
-    result
+    (result, max(lowest_index, number_index))
 }
 fn convert_word_to_number(word: String) -> usize {
     print!("t ");
@@ -78,4 +85,5 @@ fn convert_word_to_number(word: String) -> usize {
         .iter()
         .position(|&item| item == word)
         .unwrap()
+        + 1
 }

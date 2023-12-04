@@ -9,6 +9,10 @@ fn main() {
     let path = "input/input.txt";
     let input = read_to_string(&path).expect(&format!("Could not read file {}", &path).to_string());
 
+    get_numbers_and_sum(input);
+    get_numbers_and_sum(TEST_SAMPLE.to_string());
+}
+fn get_numbers_and_sum(input: String) {
     let numbers: Vec<u32> = get_numbers(input);
     let sum: u32 = numbers.iter().sum();
     println!("sum is: {:}", sum);
@@ -87,3 +91,10 @@ fn convert_word_to_number(word: String) -> usize {
         .unwrap()
         + 1
 }
+const TEST_SAMPLE: &str = "two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen";

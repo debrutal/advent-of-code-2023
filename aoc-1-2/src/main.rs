@@ -1,6 +1,6 @@
 use std::fs::read_to_string;
 
-const TEST_SAMPLE: &str = "two1nine
+const _TEST_SAMPLE: &str = "two1nine
 eightwothree
 abcone2threexyz
 xtwone3four
@@ -14,10 +14,11 @@ const NUMBER_STRINGS: [&'static str; 9] = [
 
 fn main() {
     let path = "input/input.txt";
-    let input = read_to_string(&path).expect(&format!("Could not read file {}", &path).to_string());
+    let _input =
+        read_to_string(&path).expect(&format!("Could not read file {}", &path).to_string());
 
-    get_numbers_and_sum(input);
-    //    get_numbers_and_sum(TEST_SAMPLE.to_string());
+    get_numbers_and_sum(_input);
+    //get_numbers_and_sum(_TEST_SAMPLE.to_string());
 }
 fn get_numbers_and_sum(input: String) {
     let numbers: Vec<u32> = get_numbers(input);
@@ -41,7 +42,7 @@ fn get_first_and_last_number(line: String) -> u32 {
         Some(first) => {
             let last = find_last(&line)
                 .expect("This should not happen since find_first already found something!");
-            let number_as_str: String = if first.0 == last.0 {
+            let number_as_str: String = if first.1 == last.1 {
                 println!("adding {}", first.0);
                 format!("{}", first.0).to_string()
             } else {
@@ -108,9 +109,13 @@ fn find_last(line: &String) -> Option<(String, usize)> {
     };
 
     for word in NUMBER_STRINGS.iter() {
-        if let Some(word_found_on_index) = line.find(word) {
+        if let Some(word_found_on_index) = line.rfind(word) {
             result = match result {
                 Some(inner_result) => {
+                    //                    println!(
+                    //                        "found word {} at location {}",
+                    //                        inner_result.0, inner_result.1
+                    //                    );
                     if word_found_on_index > inner_result.1 {
                         let number = convert_word_to_number(word.to_string());
                         Some((format!("{:}", number), word_found_on_index))

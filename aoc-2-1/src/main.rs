@@ -57,7 +57,11 @@ fn parse_input(input: &str) -> Vec<Game> {
         let index_of_column = line
             .find(':')
             .unwrap_or_else(|| panic!("no column found for string {line}"));
-        let game_number = line[index_of_column - 1..index_of_column]
+
+        let game_number = line[..index_of_column]
+            .split_whitespace()
+            .last()
+            .unwrap()
             .to_string()
             .parse::<usize>()
             .expect("cannot parse game_number");
@@ -97,7 +101,7 @@ fn find_amount_of_dies(string: String, color: Color) -> usize {
             .expect("This is not beautiful. fix me");
         //        print!("String is {string} ");
         //        print!("COLOR= {:?} ", color);
-        //        println!("SPLIT_STRING = {split_string}");
+        // println!("SPLIT_STRING = {split_string}");
         split_string.parse::<usize>().unwrap()
     })
 }
